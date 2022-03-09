@@ -16,7 +16,12 @@ use solana_sdk::{
 use spl_token;
 mod util;
 use spl_associated_token_account::{create_associated_token_account,get_associated_token_address};
+use dotenv::dotenv;
+use std::env;
+
 fn main() {
+    dotenv().ok();
+
     let key_pair = util::load_config_keypair();
     let mut ins: Vec<Instruction> = vec![];
     let wallet_publickey = key_pair.pubkey();
@@ -67,19 +72,19 @@ fn main() {
     let creators = Some(vec![creator]);
     let metadata_account = Pubkey::find_program_address(seeds, &id()).0;
     let metadata_ins = instruction::create_metadata_accounts(
-        id(),
+        id(),                   // metaplex program ID
         metadata_account,
         mint_pub,
         wallet_publickey,
         wallet_publickey,
         wallet_publickey,
-        "".to_string(),
-        "".to_string(),
-        "".to_string(),
+        env::var("NFT_NAME").unwrap(),
+        env::var("NFT_SYMBOL").unwrap(),
+        env::var("NFT_URI").unwrap(),
         creators,
         0,
         true,
-        true,
+        true,                   // NFT metadata mutable or not
     );
     
     ins.push(create_account_tx);
