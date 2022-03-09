@@ -28,7 +28,7 @@ fn main() {
     let fee_payer = Some(&wallet_publickey);
     let mut signer: Vec<&Keypair> = vec![&key_pair];
     // change RPC endpoint here
-    let rpc_url: String = "https://rpc-mainnet-fork.dappio.xyz".to_string();
+    let rpc_url: String = "https://api.devnet.solana.com".to_string();
     let commitment = CommitmentConfig::confirmed();
     let rpc_client = RpcClient::new_with_commitment(rpc_url, commitment);
     let new_mint = Keypair::new();
@@ -97,7 +97,8 @@ fn main() {
     tx.sign(&signer, recent);
     let messagee = encode(tx.message_data());
 
-    //let simulation = rpc_client.simulate_transaction(&tx);
+    // let simulation = rpc_client.simulate_transaction(&tx);
+    // println!("{:?}", simulation);
     let send = rpc_client.send_and_confirm_transaction_with_spinner(&tx);
     println!(
         "tx: {:?} \nmint:{:?}\nresult:{:?}",
