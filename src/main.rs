@@ -28,7 +28,7 @@ fn main() {
     let fee_payer = Some(&wallet_publickey);
     let mut signer: Vec<&Keypair> = vec![&key_pair];
     // change RPC endpoint here
-    let rpc_url: String = "https://api.devnet.solana.com".to_string();
+    let rpc_url: String = env::var("NETWORK_RPC").unwrap();
     let commitment = CommitmentConfig::confirmed();
     let rpc_client = RpcClient::new_with_commitment(rpc_url, commitment);
     let new_mint = Keypair::new();
