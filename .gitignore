@@ -2,3 +2,4 @@
 assets
 Cargo.lock
 .env
+data.csv
