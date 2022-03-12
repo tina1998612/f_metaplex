@@ -21,6 +21,7 @@ Modify `Cargo.toml` like below and then run `cargo build` to install
 new_dependency_name = "0.0.version"
 ```
 
-## TODO
+## Contact
 
-- mint_to user
+@tinaaaaalee
+consulting@zinstitute.net
