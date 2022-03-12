@@ -19,8 +19,16 @@ use spl_associated_token_account::{create_associated_token_account,get_associate
 use dotenv::dotenv;
 use std::env;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     dotenv().ok();
+
+    let records = util::read_from_file("data.csv").await.unwrap();
+    // println!("{:?}", util::read_from_file("data.csv").unwrap());
+    // util::read_from_file("data.csv");
+
+    for record in records.into_iter() {
+    
 
     let key_pair = util::load_config_keypair();
     let mut ins: Vec<Instruction> = vec![];
@@ -80,7 +88,7 @@ fn main() {
         wallet_publickey,
         env::var("NFT_NAME").unwrap(),
         env::var("NFT_SYMBOL").unwrap(),
-        env::var("NFT_URI").unwrap(),
+        format!("https://ipfs.io/ipfs/{}", record.ipfs_hash),
         creators,
         0,
         true,
@@ -106,4 +114,5 @@ fn main() {
         new_mint.pubkey().to_string(),
         send
     );
+    }
 }
