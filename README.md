@@ -23,5 +23,5 @@ new_dependency_name = "0.0.version"
 
 ## Contact
 
-@tinaaaaalee
-consulting@zinstitute.net
+- @tinaaaaalee
+- consulting@zinstitute.net
