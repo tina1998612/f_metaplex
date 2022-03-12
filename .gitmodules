@@ -2,3 +2,6 @@
 	path = nft_storage
 	url = https://github.com/wei1769/nft_storage.git
 	branch = main
+[submodule "rust-ipfs-api"]
+	path = rust-ipfs-api
+	url = https://github.com/ferristseng/rust-ipfs-api.git
