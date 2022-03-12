@@ -2,7 +2,7 @@
 
 ## Running the Project
 
-Setup `data.csv` referencing `data.csv.example`, change variables in `.env` referencing `.env.example` add run the following
+Setup `data.csv` referencing `data.csv.example`, change variables in `.env` referencing `.env.example`, add NFT images to `assets_original` folder, add run the following
 
 ```
 ipfs daemon
@@ -23,5 +23,4 @@ new_dependency_name = "0.0.version"
 
 ## TODO
 
-- read csv
 - mint_to user

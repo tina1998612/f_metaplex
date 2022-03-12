@@ -1,12 +1,12 @@
 use csv;
-use std::error::Error;
+use std::{error::Error, str::FromStr};
 use serde::Deserialize;
 use std::vec::Vec;
 
 use solana_sdk::{
     // instruction::{AccountMeta, },
-    // pubkey::Pubkey,
-    signature::{read_keypair_file, Keypair},
+    pubkey::Pubkey,
+    signature::{read_keypair_file, Keypair}
 };
 use std::fs;
 use serde_json;
@@ -37,9 +37,9 @@ pub struct Record2 {
     pub ipfs_hash: String,
 }
 
-// pub fn get_pub(pubkey: &str) -> Pubkey {
-//     Pubkey::from_str(pubkey).unwrap()
-// }
+pub fn get_pub(pubkey: &str) -> Pubkey {
+    Pubkey::from_str(pubkey).unwrap()
+}
 // pub fn getkey(public_key: Pubkey, is_signer: bool, is_writable: bool) -> AccountMeta {
 //     if is_writable {
 //         AccountMeta::new(public_key, is_signer)
@@ -113,7 +113,7 @@ pub async fn read_from_file(path: &str) -> Result<Vec<Record2>, Box<dyn Error>> 
 
 async fn make_json_metadata(record: Record, i: i32) -> Value {
     let file_name = format!("{}-{}-{}", record.cert_type, record.name, record.id);
-    // reset_folder(DIR.to_string());
+    reset_folder(DIR.to_string());
     println!("{}/{}.jpg", ORIGIN_DIR, file_name);
     fs::rename(format!("{}/{}.jpg", ORIGIN_DIR, file_name), format!("{}/{}.jpg", DIR, file_name)).unwrap();
     

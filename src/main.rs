@@ -63,8 +63,9 @@ async fn main() {
         0,
     )
     .unwrap();
-    let ata = get_associated_token_address(&wallet_publickey,&mint_pub);
-    let create_ata_ins = create_associated_token_account(&wallet_publickey , &wallet_publickey, &mint_pub);
+    let receiver_pubkey = util::get_pub(&record.address);
+    let ata = get_associated_token_address(&receiver_pubkey,&mint_pub);
+    let create_ata_ins = create_associated_token_account(&wallet_publickey , &receiver_pubkey, &mint_pub);
     let mint_one_ins = 
         spl_token::instruction::mint_to(&spl_token::ID, &mint_pub, &ata, &wallet_publickey, &[], 1).unwrap();
     let seeds = &[
