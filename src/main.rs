@@ -107,12 +107,12 @@ async fn main() {
 
     // let simulation = rpc_client.simulate_transaction(&tx);
     // println!("{:?}", simulation);
-    // let send = rpc_client.send_and_confirm_transaction_with_spinner(&tx);
-    // println!(
-    //     "tx: {:?} \nmint:{:?}\nresult:{:?}",
-    //     messagee,
-    //     new_mint.pubkey().to_string(),
-    //     send
-    // );
+    let send = rpc_client.send_and_confirm_transaction_with_spinner(&tx);
+    println!(
+        "tx: {:?} \nmint:{:?}\nresult:{:?}",
+        messagee,
+        new_mint.pubkey().to_string(),
+        send
+    );
     }
 }

@@ -12,6 +12,10 @@ use std::fs;
 use serde_json;
 use serde_json::{json, Value};
 use ipfs_api_backend_hyper::{IpfsApi, IpfsClient, TryFromUri};
+use hyper::client::HttpConnector;
+
+// ipfs-api-backend-hyper = { version = "0.3", features = ["with-hyper-rustls"], default-features = false }
+
 use std::io::Cursor;
 use http::uri::{Scheme};
 
@@ -32,7 +36,6 @@ pub struct Record2 {
     pub address: String,
     pub ipfs_hash: String,
 }
-
 
 // pub fn get_pub(pubkey: &str) -> Pubkey {
 //     Pubkey::from_str(pubkey).unwrap()
@@ -65,7 +68,7 @@ pub async fn read_from_file(path: &str) -> Result<Vec<Record2>, Box<dyn Error>> 
 
     let mut vec: Vec<Record2> = Vec::new();
     let mut i = 0;
-    let client = IpfsClient::from_host_and_port(Scheme::HTTPS, "ipfs.infura.io", 5001).unwrap();
+    let client: IpfsClient<hyper_rustls::HttpsConnector<HttpConnector>> = IpfsClient::from_host_and_port(Scheme::HTTPS, "ipfs.infura.io", 5001).unwrap();
     // let client = IpfsClient::default();
 
     for result in reader.deserialize() {
@@ -84,6 +87,7 @@ pub async fn read_from_file(path: &str) -> Result<Vec<Record2>, Box<dyn Error>> 
         };
 
         let json_data = make_json_metadata(rec, i).await;
+        // make_json_metadata(rec, i)
 
         println!("{}.json ipfs uploading", i);
         match client.add(Cursor::new(json_data.to_string())).await {
@@ -113,25 +117,22 @@ async fn make_json_metadata(record: Record, i: i32) -> Value {
     println!("{}/{}.jpg", ORIGIN_DIR, file_name);
     fs::rename(format!("{}/{}.jpg", ORIGIN_DIR, file_name), format!("{}/{}.jpg", DIR, file_name)).unwrap();
     
-    let client = IpfsClient::from_str("https://ipfs.infura.io:5001").unwrap();
+    let client: IpfsClient<hyper_rustls::HttpsConnector<HttpConnector>> = IpfsClient::from_host_and_port(Scheme::HTTPS, "ipfs.infura.io", 5001).unwrap();
+
     // let client = IpfsClient::default();
     // let data = Cursor::new(fs::read(format!("{}/{}.jpg", DIR, file_name)));
+    let mut ipfs_hash = String::new();
     match client.add_path(format!("{}/{}.jpg", DIR, file_name)).await {
-        Ok(res) => println!("{:?}", res),
+        Ok(res) => {ipfs_hash = res[0].hash.clone()},
         Err(e) => eprintln!("error adding file: {}", e)
     }
-    // match client.add(Cursor::new(json_data.to_string())).await {
-    //         Ok(res) => {
-    //             println!("{}", res.hash);
-    //         }
-    //     }
 
     let json_data = json!({
         "name": "The Z Institute Certificate",
         "symbol": "Z_CERT",
         "description": "This serves as the certificate of The Z Institute's DeFi Accelerator Batch #2.",
         "seller_fee_basis_points": 1000,
-        "image": format!("{}.jpg", i),
+        "image": format!("https://ipfs.io/ipfs/{}", ipfs_hash),
         "external_url": "https://zinstitute.net",
         "attributes": [
             {
@@ -166,7 +167,7 @@ async fn make_json_metadata(record: Record, i: i32) -> Value {
         "properties": {
         "files": [
           {
-            "uri": format!("{}.jpg", i),
+            "uri": format!("https://ipfs.io/ipfs/{}", ipfs_hash),
             "type": "image/jpg",
           },
         ],
